@@ -15,7 +15,6 @@ envsubst < docker-compose.yaml.template > docker-compose.yaml
 4- Run `docker-compose up -d {service}`.
 5- There you go.
 
-
 ## Run Testnet Faucet
 1- Edit the `.env.example` file and rename it as .`env`.
 2- Go to Testnet Faucet folder and run `docker-compose up -d`.
