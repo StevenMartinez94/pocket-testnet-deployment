@@ -1,0 +1,12 @@
+version: "3"
+services:
+  testnet-backup-bot:
+    user: 'root'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: testnet-backup-bot
+    env_file:
+      - .env
+    volumes:
+      - './testnet-state-backup:/testnet-backup-bot/testnet-state-backup'

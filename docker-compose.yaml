@@ -1,0 +1,329 @@
+version: "3.8"
+x-loki:
+  &loki-logging
+  driver: loki
+  options:
+    loki-url: "http://$MONITORING_DOMAIN:3200/loki/api/v1/push"
+    max-size: 5m
+    mode: non-blocking
+    max-buffer-size: 4m
+    loki-retries: '3'
+    max-file: '3'
+    keep-file: 'false'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    user: root
+    volumes:
+      - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./monitoring/prometheus/data:/prometheus
+      - ./monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    expose:
+      - 9090
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter 
+    expose:
+      - 9100 
+    restart: unless-stopped
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    expose:
+      - 8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    restart: unless-stopped
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_1:
+    image: nodefleet/pocket-core-testnet:BETA-0.10.2
+    restart: unless-stopped
+    container_name: $SERVICE_1
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    cpus: '4'
+    mem_limit: '10G'
+    expose:
+      - "8081"
+      - "8083"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "27662:27662"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_1/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_1/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_1/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_1/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_2:
+    image: nodefleet/pocket-core-testnet:BETA-0.10.2
+    restart: unless-stopped
+    container_name: $SERVICE_2
+    command: pocket $CUSTOM_ARGS_TESTNET
+    cpus: '4'
+    mem_limit: '10G'
+    user: root 
+    expose:
+      - "8081"
+      - "8083"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "27663:27663"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_2/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_2/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_2/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_2/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_3:
+    image: nodefleet/pocket-core-testnet:BETA-0.10.2
+    restart: unless-stopped
+    container_name: $SERVICE_3
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    cpus: '4'
+    mem_limit: '10G'
+    expose:
+      - "8081"
+      - "8083"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "27664:27664"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_3/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_3/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_3/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_3/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_4:
+    image: nodefleet/pocket-core-testnet:BETA-0.10.2
+    restart: unless-stopped
+    container_name: $SERVICE_4
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    cpus: '4'
+    mem_limit: '10G'
+    expose:
+      - "8081"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "26668:26668"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_4/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_4/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_4/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_4/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_5:
+    image: nodefleet/pocket-core-testnet:BETA-0.10.2
+    restart: unless-stopped
+    container_name: $SERVICE_5
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    cpus: '4'
+    mem_limit: '10G'
+    expose:
+      - "8081"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "26669:26669"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_5/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_5/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_5/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_5/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_6:
+    image: poktscan/pocket-core:MESH-0.4.2-RC-0.10.4
+    restart: unless-stopped
+    container_name: $SERVICE_6
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    expose:
+      - "8081"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "26662:26662"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_6/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_6/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_6/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_6/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_7:
+    image: poktscan/pocket-core:MESH-0.4.2-RC-0.10.4
+    restart: unless-stopped
+    container_name: $SERVICE_7
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    expose:
+      - "8081"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "26663:26663"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_7/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_7/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_7/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_7/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  $SERVICE_8:
+    image: nodefleet/pocket-core-testnet:BETA-0.10.2
+    restart: unless-stopped
+    container_name: $SERVICE_8
+    command: pocket $CUSTOM_ARGS_TESTNET
+    user: root
+    cpus: '4'
+    mem_limit: '10G'
+    expose:
+      - "8081"
+      - "8083"
+      - "8030"
+      - "26659"
+      - "26656"
+      - "46656"
+      - "26660"
+    ports:
+      - "27665:27665"
+    environment:
+      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE1}
+      - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
+    volumes:
+      - ./$SERVICE_8/config.json:/home/app/.pocket/config/config.json                           # Pocket Configuration file
+      - ./$SERVICE_8/chains.json:/home/app/.pocket/config/chains.json                           # Pocket Configuration file
+      - ./$SERVICE_8/:/home/app/.pocket/                                                        # Node Key
+      - ./$SERVICE_8/data/:/home/app/.pocket/data/                                              # Blockchain data
+    logging: *loki-logging
+    networks:
+      - pocket
+
+  traefik:
+    cpus: 4
+    mem_limit: 16G
+    image: traefik:2.9.6
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    expose:
+      - 9005
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yaml:/traefik.yml:ro
+      - ./traefik/services/:/etc/traefik/services/:ro
+      - ./traefik/certs:/letsencrypt
+      - ./traefik/userfile:/userfile
+    labels:
+      - traefik.enable=true
+      - traefik.insecure=true
+    networks:
+      - pocket
+
+volumes:
+  loki_data:
+
+networks:
+  pocket:
+    external: true

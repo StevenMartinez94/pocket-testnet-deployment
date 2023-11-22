@@ -1,0 +1,10 @@
+[
+    {
+        "id": "0001",
+        "url": "https://example_url",
+	    "basic_auth": {
+		"username": "example_user",
+		"password": "example_pass"
+    	}
+    }
+]

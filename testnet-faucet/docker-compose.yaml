@@ -1,0 +1,16 @@
+version: '3'
+services:
+  testnet-faucet:
+    image: nodefleet/testnet-faucet
+    container_name: testnet-faucet
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - 3000
+    networks:
+      - pocket
+
+networks:
+  pocket:
+    external: true

@@ -1,0 +1,12 @@
+# Cache
+__pycache__
+
+# Env variables
+.env
+
+# Created files
+testnet-state-backup/
+
+# Docker's files
+Dockerfile
+docker-compose.yaml

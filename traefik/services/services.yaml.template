@@ -1,0 +1,252 @@
+http:
+  routers:
+    testnet-faucet:
+      rule: Host(`faucet.testnet.pokt.network`)
+      service: testnet-faucet
+      priority: 1
+      middlewares:
+      - cors-headers
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_1}-tm:
+      rule: Host(`${HOST_1}.tendermint.testnet.pokt.network`)
+      service: ${SERVICE_1}-tm
+      priority: 1
+      middlewares:
+      - traefik-auth
+      entryPoints:
+      - websecure
+      - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_2}-tm:
+      rule: Host(`${HOST_2}.tendermint.testnet.pokt.network`)
+      service: ${SERVICE_2}-tm
+      priority: 1
+      middlewares:
+      - traefik-auth
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_3}-tm:
+      rule: Host(`${HOST_3}.tendermint.testnet.pokt.network`)
+      service: ${SERVICE_3}-tm
+      priority: 1
+      middlewares:
+      - traefik-auth
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_1}:
+      rule: Host(`${HOST_1}.testnet.pokt.network`)
+      service: ${SERVICE_1}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_2}:
+      rule: Host(`${HOST_2}.testnet.pokt.network`)
+      service: ${SERVICE_2}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_3}:
+      rule: Host(`${HOST_3}.testnet.pokt.network`)
+      service: ${SERVICE_3}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_4}:
+      rule: Host(`${HOST_4}.testnet.pokt.network`)
+      service: ${SERVICE_4}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_5}:
+      rule: Host(`${HOST_5}.testnet.pokt.network`)
+      service: ${SERVICE_5}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_6}:
+      rule: Host(`${HOST_6}.testnet.pokt.network`)
+      service: ${SERVICE_6}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_7}:
+      rule: Host(`${HOST_7}.testnet.pokt.network`)
+      service: ${SERVICE_7}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_8}:
+      rule: Host(`${HOST_8}.testnet.pokt.network`)
+      service: ${SERVICE_8}
+      priority: 1
+      middlewares:
+      - cors-headers 
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    ${SERVICE_8}-tm:
+      rule: Host(`${HOST_8}.tendermint.testnet.pokt.network`)
+      service: ${SERVICE_8}-tm
+      priority: 1
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    full-nodes:
+      rule: Host(`nodes.testnet.pokt.network`)
+      service: full-nodes
+      priority: 1
+      middlewares:
+      - cors-headers
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+    full-nodes-tendermint:
+      rule: Host(`nodes.tendermint.testnet.pokt.network`)
+      service: full-nodes-tendermint
+      priority: 1
+      middlewares:
+      - cors-headers
+      entryPoints:
+        - websecure
+        - web
+      tls:
+        certResolver: https-resolver
+  services:
+    testnet-faucet:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://testnet-faucet:3000
+    ${SERVICE_1}-tm:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_1}:26657
+    ${SERVICE_2}-tm:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_2}:26657
+    ${SERVICE_3}-tm:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_3}:26657
+    ${SERVICE_1}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_1}:8081
+    ${SERVICE_2}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_2}:8081
+    ${SERVICE_3}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_3}:8081
+    ${SERVICE_4}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_4}:8081
+    ${SERVICE_5}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_5}:8081
+    ${SERVICE_6}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_6}:8081
+    ${SERVICE_7}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_7}:8081
+    ${SERVICE_8}:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_8}:8081
+    ${SERVICE_8}-tm:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://${SERVICE_8}:26657
+    full-nodes:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: https://node7.testnet.pokt.network
+          - url: https://node8.testnet.pokt.network
+    full-nodes-tendermint:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: https://node7.tendermint.testnet.pokt.network
+          - url: https://node8.tendermint.testnet.pokt.network
+  middlewares:
+    traefik-auth:
+      basicauth:
+        usersfile: /userfile
+    cors-headers:
+      headers:
+        accesscontrolallowmethods: ["POST", "GET", "OPTIONS", "PUT"]
+        accesscontrolallowheaders: ["*"]
+        accesscontrolalloworiginlist: ["*"]

@@ -1,0 +1,30 @@
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: '$MONITOR_NAME'
+
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+ - job_name: 'traefik'
+   scrape_interval: 5s
+   static_configs:
+     - targets: ['traefik:9005']
+
+ - job_name: 'node_exporter'
+   scrape_interval: 5s
+   static_configs:
+      - targets: ['node-exporter:9100']
+
+ - job_name: 'cadvisor'
+   static_configs:
+     - targets: ['cadvisor:8080']
+
+ - job_name: 'testnet_nodes'
+   static_configs:
+     - targets: ['$SERVICE_1:26660', '$SERVICE_2:26660', '$SERVICE_3:26660', '$SERVICE_4:26660', '$SERVICE_5:26660', '$SERVICE_6:26660', '$SERVICE_7:26660', '$SERVICE_1:8083', '$SERVICE_2:8083', '$SERVICE_3:8083', '$SERVICE_4:8083', '$SERVICE_5:8083', '$SERVICE_6:8083', '$SERVICE_7:8083']

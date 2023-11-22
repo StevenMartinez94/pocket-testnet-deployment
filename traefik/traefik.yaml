@@ -1,0 +1,54 @@
+log:
+  level: INFO 
+
+MaxIdleConnsPerHost: 400000 
+
+metrics:
+  prometheus:
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+    entryPoint: metrics
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
+api:
+  dashboard: true
+
+ping:
+  entryPoint: "ping"
+  manualRouting: true
+
+serversTransport:
+  insecureSkipVerify: true
+
+entryPoints:
+  metrics:
+    address: ":9005"
+  ping:
+    address: ":8095"
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  https-resolver:
+    acme:
+      email: lowell.abbott@gmail.com
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  docker:
+    endpoint: unix:///var/run/docker.sock
+    exposedByDefault: false
+  file:
+    directory: "/etc/traefik/services/"
+    watch: true
+
+pilot:
+  token: "bfdc0404-98c8-4c71-b9c6-68ecdbe034c9"
